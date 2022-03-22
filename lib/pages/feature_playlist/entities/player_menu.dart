@@ -1,0 +1,1 @@
+enum PlayerMenu { play, stop }

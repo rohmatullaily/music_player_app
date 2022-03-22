@@ -64,12 +64,12 @@ class Music {
   late final String primaryGenreName;
   late final bool isStreamable;
 
-  Music.fromJson(Map<String, dynamic> json){
+  Music.fromJson(Map<String, dynamic> json) {
     wrapperType = json['wrapperType'];
     kind = json['kind'];
     artistId = json['artistId'];
     collectionId = json['collectionId'];
-    trackId = json['trackId'];
+    trackId = json['trackId'] ?? "";
     artistName = json['artistName'];
     collectionName = json['collectionName'];
     trackName = json['trackName'];
