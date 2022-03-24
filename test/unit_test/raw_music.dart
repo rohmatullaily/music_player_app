@@ -1,38 +1,4 @@
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
-import 'package:music_player_application/pages/feature_playlist/blocs/playlist_usecase.dart';
-import 'package:music_player_application/pages/feature_playlist/entities/music.dart';
-import 'package:music_player_application/pages/feature_playlist/entities/music_response.dart';
-import 'package:rx_bloc/rx_bloc.dart';
-
-class PlaylistUseCaseMock implements IPlaylistUseCase {
-  late final Dio _dioClient;
-
-  PlaylistUseCaseMock({required Dio dioClient}) : _dioClient = dioClient;
-  @override
-  Future<Result<List<Music>>> getMusicList({required String artistName}) async {
-    try {
-      final response = Response(
-          data: musicList,
-          statusCode: 200,
-          statusMessage: "success",
-          requestOptions: RequestOptions(path: ''));
-      if (response.statusCode == 200 && response.data != null) {
-        final stringData = (response.data as String? ?? "");
-        if (stringData.isNotEmpty) {
-          final musicResponse = MusicResponse.fromJson(json.decode(stringData));
-          return Result.success(musicResponse.results);
-        }
-      }
-      return Result.error(Exception([response.statusMessage]));
-    } catch (e) {
-      return Result.error(Exception([e]));
-    }
-  }
-}
-
-String musicList = '''
+String musicListRaw = '''
 {"resultCount":25,"results": [
 {"wrapperType":"track", "kind":"song", "artistId":396754057, "collectionId":695318295, "trackId":695318302, "artistName":"One Direction", "collectionName":"Midnight Memories (Deluxe Edition)", "trackName":"Story of My Life", "collectionCensoredName":"Midnight Memories (Deluxe Edition)", "trackCensoredName":"Story of My Life", "artistViewUrl":"https://music.apple.com/us/artist/one-direction/396754057?uo=4", "collectionViewUrl":"https://music.apple.com/us/album/story-of-my-life/695318295?i=695318302&uo=4", "trackViewUrl":"https://music.apple.com/us/album/story-of-my-life/695318295?i=695318302&uo=4", 
 "previewUrl":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/ce/32/81/ce32816e-b9e8-e9a8-94bf-40e4f99e3596/mzaf_2990346819158497013.plus.aac.p.m4a", "artworkUrl30":"https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/4c/0e/a8/4c0ea826-aba1-38cd-a1db-74ad5443f7f6/source/30x30bb.jpg", "artworkUrl60":"https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/4c/0e/a8/4c0ea826-aba1-38cd-a1db-74ad5443f7f6/source/60x60bb.jpg", "artworkUrl100":"https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/4c/0e/a8/4c0ea826-aba1-38cd-a1db-74ad5443f7f6/source/100x100bb.jpg", "collectionPrice":14.99, "trackPrice":1.29, "releaseDate":"2013-10-28T07:00:00Z", "collectionExplicitness":"notExplicit", "trackExplicitness":"notExplicit", "discCount":2, "discNumber":1, "trackCount":18, "trackNumber":2, "trackTimeMillis":245493, "country":"USA", "currency":"USD", "primaryGenreName":"Pop", "isStreamable":true}, 
@@ -83,3 +49,8 @@ String musicList = '''
 {"wrapperType":"track", "kind":"song", "artistId":396754057, "collectionId":695318295, "trackId":695319741, "artistName":"One Direction", "collectionName":"Midnight Memories (Deluxe Edition)", "trackName":"Why Don't We Go There", "collectionCensoredName":"Midnight Memories (Deluxe Edition)", "trackCensoredName":"Why Don't We Go There", "artistViewUrl":"https://music.apple.com/us/artist/one-direction/396754057?uo=4", "collectionViewUrl":"https://music.apple.com/us/album/why-dont-we-go-there/695318295?i=695319741&uo=4", "trackViewUrl":"https://music.apple.com/us/album/why-dont-we-go-there/695318295?i=695319741&uo=4", 
 "previewUrl":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/f7/fa/67/f7fa6710-6760-6364-2cf2-aa57d9a7e909/mzaf_17495926700142093065.plus.aac.p.m4a", "artworkUrl30":"https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/4c/0e/a8/4c0ea826-aba1-38cd-a1db-74ad5443f7f6/source/30x30bb.jpg", "artworkUrl60":"https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/4c/0e/a8/4c0ea826-aba1-38cd-a1db-74ad5443f7f6/source/60x60bb.jpg", "artworkUrl100":"https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/4c/0e/a8/4c0ea826-aba1-38cd-a1db-74ad5443f7f6/source/100x100bb.jpg", "collectionPrice":14.99, "trackPrice":1.29, "releaseDate":"2013-11-25T08:00:00Z", "collectionExplicitness":"notExplicit", "trackExplicitness":"notExplicit", "discCount":2, "discNumber":1, "trackCount":18, "trackNumber":15, "trackTimeMillis":174360, "country":"USA", "currency":"USD", "primaryGenreName":"Pop", "isStreamable":true}]
 }''';
+
+String selectedMusicRaw = r'''
+{"wrapperType":"track", "kind":"song", "artistId":396754057, "collectionId":695318295, "trackId":695318302, "artistName":"One Direction", "collectionName":"Midnight Memories (Deluxe Edition)", "trackName":"Story of My Life", "collectionCensoredName":"Midnight Memories (Deluxe Edition)", "trackCensoredName":"Story of My Life", "artistViewUrl":"https://music.apple.com/us/artist/one-direction/396754057?uo=4", "collectionViewUrl":"https://music.apple.com/us/album/story-of-my-life/695318295?i=695318302&uo=4", "trackViewUrl":"https://music.apple.com/us/album/story-of-my-life/695318295?i=695318302&uo=4", 
+"previewUrl":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/ce/32/81/ce32816e-b9e8-e9a8-94bf-40e4f99e3596/mzaf_2990346819158497013.plus.aac.p.m4a", "artworkUrl30":"https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/4c/0e/a8/4c0ea826-aba1-38cd-a1db-74ad5443f7f6/source/30x30bb.jpg", "artworkUrl60":"https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/4c/0e/a8/4c0ea826-aba1-38cd-a1db-74ad5443f7f6/source/60x60bb.jpg", "artworkUrl100":"https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/4c/0e/a8/4c0ea826-aba1-38cd-a1db-74ad5443f7f6/source/100x100bb.jpg", "collectionPrice":14.99, "trackPrice":1.29, "releaseDate":"2013-10-28T07:00:00Z", "collectionExplicitness":"notExplicit", "trackExplicitness":"notExplicit", "discCount":2, "discNumber":1, "trackCount":18, "trackNumber":2, "trackTimeMillis":245493, "country":"USA", "currency":"USD", "primaryGenreName":"Pop", "isStreamable":true}
+    ''';

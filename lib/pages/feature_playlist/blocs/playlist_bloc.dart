@@ -81,7 +81,7 @@ class PlaylistBloc extends $PlaylistBloc {
         }).switchMap((musics) async* {
           if (_currentSelectedMusic != null) {
             final currentIndex = musics.indexOf(_currentSelectedMusic!);
-            if (currentIndex - 1 >= 0) {
+            if (currentIndex - 1 >= 0 && musics.isNotEmpty) {
               yield musics[currentIndex - 1];
             }
           }
